@@ -1,0 +1,17 @@
+.realeasescontainer {
+    width: 100%;
+}
+
+.filterRealeases {
+    width: 90%;
+    height: 100px;
+    background-color: #ececec;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding-left: 10px;
+}
+
+.tableRealeases {
+    width: 90%;
+}
