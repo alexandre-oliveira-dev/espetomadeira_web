@@ -3,7 +3,7 @@
 }
 
 .filterRealeases {
-    width: 90%;
+    width: 95%;
     height: 100px;
     background-color: #ececec;
     display: flex;
@@ -13,5 +13,5 @@
 }
 
 .tableRealeases {
-    width: 90%;
+    width: 95%;
 }
