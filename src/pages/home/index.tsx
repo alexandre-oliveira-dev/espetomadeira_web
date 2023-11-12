@@ -18,7 +18,7 @@ export default function Home() {
 
 
 
-  function handlePrintFlyer() {
+  function handlePrint() {
     setTimeout(() => {
       const divRef = document.getElementById('table') as HTMLElement;
       const divToExport = divRef;
@@ -58,11 +58,9 @@ export default function Home() {
         <Title level={4}>Selecione as datas</Title>
         <DatePicker.RangePicker
           allowClear
-          //value={[dayjs(query.businessDateFrom), dayjs(query.businessDateTo)]}
           format="DD/MM/YYYY"
           style={{ maxWidth: 250 }}
           allowEmpty={[true, true]}
-          //presets={datePickerPresets}
           onChange={(dates) => {
             const [dateFrom, dateTo] = (dates as unknown as [Dayjs, Dayjs]) ?? [
               undefined,
@@ -73,7 +71,6 @@ export default function Home() {
           }}
         />
         <div style={{ marginTop: '20px' }}>
-          {' '}
           <Button
             type="primary"
             onClick={async () => {
@@ -107,7 +104,7 @@ export default function Home() {
                   
                 }),
              ]).finally(() => {
-               handlePrintFlyer()
+               handlePrint()
                setLoad(false)
              })
               
