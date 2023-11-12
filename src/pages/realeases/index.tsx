@@ -182,6 +182,9 @@ export default function Realeases() {
       .then(() => {
         alert('Registro criado com sucesso');
         setOpen(false);
+        setTimeout(() => {
+          window.location.reload()
+        }, 2000);
       })
       .catch((err) => console.log(err));
   }
