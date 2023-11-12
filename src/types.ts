@@ -1,16 +1,16 @@
 export enum ReleaseType {
-    // Add your specific release types here if needed
-    entrada='entrada',
-    saida='saida'
+  // Add your specific release types here if needed
+  entrada = 'entrada',
+  saida = 'saida',
 }
 
-  export enum PaymentMethod {
-    pix='pix',
-    boleto='boleto',
-    credtCard='creditCard',
-    debitCard='debitCard',
-    money='money',
-  }
+export enum PaymentMethod {
+  pix = 'pix',
+  boleto = 'boleto',
+  credtCard = 'cartão de crédito',
+  debitCard = 'cartão de débito',
+  money = 'dinheiro',
+}
 
 // Interfaces
 export interface Codes {
@@ -40,9 +40,18 @@ export interface Users {
   Releases: Releases[];
 }
 
-
 export interface FindManyArgs {
-  where?: Releases
-  take?:number
+  where?: Releases;
+  take?: number;
 }
+export type BankBalanceUncheckedCreateInput = {
+  id?: string;
+  balance?: number;
+  updated_at?: Date | string;
+};
 
+export type WalletUncheckedCreateInput = {
+  id?: string;
+  balance?: number;
+  updated_at?: Date | string;
+};

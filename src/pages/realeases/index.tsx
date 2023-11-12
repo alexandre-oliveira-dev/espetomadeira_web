@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Button,
@@ -47,6 +48,7 @@ export default function Realeases() {
   const [query, setQuery] = useQueryParams(params);
   const [dataTable, setDataTable] = useState<Data[]>([]);
   const [paymetType, setPaymentType] = useState(ReleaseType.entrada);
+  const [load, setLoad] = useState(false)
 
   const variables = {
     where: {
@@ -68,10 +70,12 @@ export default function Realeases() {
 
   useEffect(() => {
     async function queryRealeases() {
+      setLoad(true)
       try {
         const { data } = await api.post('/findManyRealeases', {
           data: variables.where,
         });
+        setLoad(false)
         return setDataTable(data);
       } catch (err) {
         console.log(err);
@@ -132,7 +136,7 @@ export default function Realeases() {
       title: 'Status',
       dataIndex: nameof<Data>('status'),
       render(text, rec) {
-        return rec.status === 'pago' ? (
+        return rec.tipo === ReleaseType.entrada ? '' : rec.status === 'pago' ? (
           <Tag color="green">{text}</Tag>
         ) : (
           <Tag color="red">{text}</Tag>
@@ -148,13 +152,8 @@ export default function Realeases() {
       render(_text, rec) {
         return rec.status === 'pago' || rec.tipo === 'entrada' ? '' :
           <Button onClick={async () => {
-            await api.put(`/updateRealeases?id=${rec.id}`, {
-              data: {
-                status:'pago'
-              },
-             
-            })
-            .then(async()=> await api.get('/findManyRealeases') )
+            await api.put(`/updateRealeases/${rec.id}`)
+            .then(()=> window.location.reload())
           }} type="primary" style={{ background: 'green' }}>
             Efetuar pagamento
           </Button>
@@ -199,7 +198,7 @@ export default function Realeases() {
       >
         <Form form={form}>
           <Row style={{ gap: '15px' }}>
-            <Col>
+            <Col flex={1}>
               <div>
                 <span>Tipo</span>
               </div>
@@ -402,7 +401,7 @@ export default function Realeases() {
                   <span>Forma de pagamento</span>
                 </div>
                 <FormItem name={nameof<Data>('formpgm')}>
-                  <Select placeholder="Selecione">
+                  <Select style={{width:'200px'}} placeholder="Selecione">
                     <Select.Option value={PaymentMethod.pix}>
                       {PaymentMethod.pix}
                     </Select.Option>
@@ -428,7 +427,7 @@ export default function Realeases() {
                 <span>Valor R$</span>
               </div>
               <FormItem name={nameof<Data>('valor')}>
-                <Input type="number" placeholder="Digite aqui"></Input>
+                <Input value={query?.value || undefined} type="number" placeholder="Digite aqui"></Input>
               </FormItem>
             </Col>
           </Row>
@@ -646,10 +645,11 @@ export default function Realeases() {
 
       <div className="tableRealeases">
         <Table
+          loading={load}
           pagination={{
             pageSize: 5,
           }}
-          dataSource={dataTable as Data[]}
+          dataSource={dataTable}
           columns={fields}
         ></Table>
       </div>
