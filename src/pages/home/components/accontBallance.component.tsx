@@ -21,8 +21,8 @@ export default function AccontBallance() {
     async function queryRealeases() {
       try {
         const [data, walletData] = await Promise.all([
-          api.post('/findManyBankbalance'),
-          api.post('/findManybalance'),
+          api.post('/findManyBankbalance', {data:{}}),
+          api.post('/findManybalance',{data:{}}),
         ]);
         setDataBankBalance(data.data);
         setWallet(walletData.data);
