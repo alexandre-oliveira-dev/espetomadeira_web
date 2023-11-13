@@ -4,8 +4,8 @@ import {
   Col,
   Row,
   Skeleton,
+  Spin,
   Tag,
-  Tooltip,
   Typography,
 } from 'antd';
 import { useEffect, useState } from 'react';
@@ -21,6 +21,7 @@ export default function AccontBallance() {
   const [type, setType] = useState<number | null>(null);
   const [value, setValue] = useState<string>('');
   const [load, setLoad] = useState(false);
+  const [loadSpin, setLoadSpin] = useState(false);
   const [dataBankBalance, setDataBankBalance] = useState<
     BankBalanceUncheckedCreateInput[]
   >([]);
@@ -47,24 +48,26 @@ export default function AccontBallance() {
 
   async function handleUpdateBalance() {
     if (value === '') return;
+    setLoadSpin(true)
     switch (type) {
       case 1:
         await api
-          .post('/balance', {
-            data: {
-              balance: value.replace(',', '.').replace('R$', ''),
-              updated_at: dayjs(new Date()).toISOString(),
-            },
-          })
-          .then(() => {
-            setTimeout(() => {
-              window.location.reload();
-            }, 2000);
-          });
-
+        .post('/balance', {
+          data: {
+            balance: value.replace(',', '.').replace('R$', ''),
+            updated_at: dayjs(new Date()).toISOString(),
+          },
+        })
+        .then(() => {
+          setLoadSpin(false)
+          setTimeout(() => {
+            window.location.reload();
+          }, 2000);
+        });
+        
         break;
-      case 2:
-        await api
+        case 2:
+          await api
           .post('/bankBalance', {
             data: {
               balance: value.replace(',', '.').replace('R$', ''),
@@ -72,6 +75,7 @@ export default function AccontBallance() {
             },
           })
           .then(() => {
+            setLoadSpin(false)
             setTimeout(() => {
               window.location.reload();
             }, 2000);
@@ -131,15 +135,14 @@ export default function AccontBallance() {
                     )}
                   </Typography.Text>
                 </Tag>
-                <Tooltip>Digite sem virgulas ou pontos.</Tooltip>
               </Row>
               <br />
               <Row>
                 <span>Data</span>
               </Row>
               <Row>
-                <span style={{ fontSize: '25px' }}>
-                  {dayjs(wallet[0]?.updated_at).format('DD/MM/YYYY')}
+                <span style={{ fontSize: '20px' }}>
+                  {`${dayjs(wallet[0]?.updated_at).format('DD/MM/YYYY')} as ${dayjs(wallet[0]?.updated_at).format('hh:mm:ss')}`}
                 </span>
               </Row>
             </Col>
@@ -148,12 +151,12 @@ export default function AccontBallance() {
                 onClick={() => {
                   setType(1);
                   handleUpdateBalance();
-
-                  //setOpen(true);
                 }}
                 type="primary"
               >
-                Atualizar saldo
+                  {
+                    loadSpin ? <Spin></Spin> : 'Atualizar saldo'
+                }
               </Button>
             </Row>
           </Card>
@@ -190,15 +193,14 @@ export default function AccontBallance() {
                     )}
                   </Typography.Text>{' '}
                 </Tag>
-                <Tooltip>Digite sem virgulas ou pontos.</Tooltip>
               </Row>
               <br />
               <Row>
                 <span>Data</span>
               </Row>
               <Row>
-                <span style={{ fontSize: '25px' }}>
-                  {dayjs(dataBankBalance[0]?.updated_at).format('DD/MM/YYYY')}
+                <span style={{ fontSize: '20px' }}>
+                  {`${dayjs(dataBankBalance[0]?.updated_at).format('DD/MM/YYYY')} as ${dayjs(dataBankBalance[0]?.updated_at).format('hh:mm:ss')}`}
                 </span>
               </Row>
             </Col>
@@ -207,11 +209,12 @@ export default function AccontBallance() {
                 onClick={() => {
                   setType(2);
                   handleUpdateBalance();
-                  //setOpen(true);
                 }}
                 type="primary"
               >
-                Atualizar saldo
+                 {
+                    loadSpin ? <Spin></Spin> : 'Atualizar saldo'
+                }
               </Button>
             </Row>
           </Card>
